@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dialog组件</title>
+    <style>
+        .dialog{
+            position:fixed;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            background-color: rgba(0,0,0,.3);
+            display:none;
+            opacity:0;
+            transition: all .3s;
+        }
+        .dialog.show{
+            display:block;
+        }
+        .dialog.appear{
+            opacity:1;
+        }
+        .dialog .main{
+            width:60%;
+            background-color: #fff;
+            margin:0 auto;
+            padding:16px;
+            border-radius:6px;
+            box-shadow:0 0 4px 0 rgba(0,0,0,.3);
+            transform:translateY(-100%);
+            opacity:0;
+            transition: all .3s;
+        }
+        .dialog.appear .main{
+            transform:translateY(40px);
+            opacity:1;
+        }
+        .dialog .header{
+            display:flex;
+            justify-content: center;
+            align-items:center;
+            font-size: 18px;
+        }
+        .dialog .header .close{
+            margin-left:auto;
+            display: flex;
+            align-items: center;
+            justify-content:center;
+            outline: none;
+            border:none;
+            padding:5px;
+            cursor:pointer;
+        }
+        .dialog .header .close::before,
+        .dialog .header .close::after{
+            content:'';
+            display:block;
+            position:absolute;
+            width:10px;
+            height: 1px;
+            background:#333;
+            transform: rotate(45deg);
+        }
+        .dialog .header .close::after{
+            transform: rotate(-45deg);
+        }
+        .dialog .footer{
+            display:flex;
+            justify-content:flex-end;
+        }
+        .dialog .footer .button{
+            margin:10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dialog</h2>
+        <button class="open-dialog">打开弹窗</button>
+        <div class="dialog">
+            <div class="main">
+                <div class="header">提示 <button class="close"></button></div>
+                <div class="content">这是一段消息</div>
+                <div class="footer">
+                    <button class="button btn-cancel">取消</button>
+                    <button class="button primary btn-ok">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    class Dialog {
+        constructor ($root,options ={}){
+            this.$root = $root;
+            this.options = options;
+            this.onCancel = options.onCancel || function(){}
+            this.onOk = options.onOk || function(){}
+
+            this.bind()
+        }
+        bind(){
+            let self = this
+            this.$root.querySelector('.close').onclick =  () => {
+                this.hide()
+                this.onCancel()
+            }
+            this.$root.querySelector('.btn-cancel').onclick = function (){
+                self.hide()
+                self.onCancel()
+            }
+            this.$root.querySelector('.btn-ok').onclick = function (){
+                this.hide()
+                this.onOk()
+            }.bind(self)
+        }
+
+        hide(){
+            this.$root.classList.remove('appear')
+            setTimeout(() => this.$root.classList.remove('show'),400)
+            
+        }
+        show(){
+            this.$root.classList.add('show')
+            // setTimeout(() => this.$root.classList.add('appear'))
+            this.$root.classList.add('appear')
+        }
+    }
+    let node = document.querySelector('.dialog')
+    console.log('node: ', node);
+    let dialog = new Dialog(node,{
+        onCancel(){
+            console.log('用户点了取消');
+        },
+        onOk(){
+            console.log('用户点了确定');
+        }
+    })
+    document.querySelector('.open-dialog').onclick=function (){
+        dialog.show()
+    }
+</script>
+</html>

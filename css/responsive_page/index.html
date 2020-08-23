@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式页面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <ul id="first"></ul>
+    <ul id="second"></ul>
+</body>
+<script>
+     function addMessage (element,message){
+        var messageElement = document.createElement("li")
+        messageElement.textContent = message
+        element.appendChild(messageElement)
+     }
+     var first = document.getElementById("first")
+     addMessage(first,"page loading")
+
+     document.body.addEventListener("mousemove",function (){
+         var second = document.getElementById("second")
+         addMessage(second,"event: mousemove")
+     })
+     document.body.addEventListener("click",function (){
+         var second = document.getElementById("second")
+         addMessage(second,"event: click")
+     })
+</script>
+</html>
